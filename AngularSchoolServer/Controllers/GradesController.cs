@@ -26,6 +26,12 @@ namespace AngularSchoolServer.Controllers
         {
             return Ok(await db.Grades.AsSplitQuery().AsNoTracking().ToListAsync());
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetStudentGrades(int id)
+        {
+            return Ok(await db.Grades.Include(a=>a.Lesson).ThenInclude(a=>a.Teacher)
+                .Where(a=>a.StudentID==id).AsSplitQuery().AsNoTracking().ToListAsync());
+        }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] Grade model)
